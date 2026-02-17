@@ -48,26 +48,26 @@ export const Contact = () => {
                 date: new Date().toLocaleString()
             };
 
-            // 1. Submit to Firestore
+            // 1. Submit to Firestore (Priority - we wait for this)
             const firestorePromise = addDoc(collection(db, "contacts"), submissionData);
 
-            // 2. Submit to Google Sheets (Ported from server.js)
+            // 2. Submit to Google Sheets (Background - we don't wait for this)
             const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxeu7MYzvgoKisbcmC8f9Oy49gDIXdfyxs3-r7zuEBECdRAUouvfU7UdDkap3uruabI/exec';
-            const sheetPromise = fetch(GOOGLE_SHEET_URL, {
+            fetch(GOOGLE_SHEET_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(submissionData)
-            });
+            }).catch(err => console.error("Background Sheet Sync Error:", err));
 
-            // Create a timeout promise
+            // Create a timeout promise for Firestore
             const timeoutPromise = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('timeout')), 30000)
             );
 
-            // Wait for Firestore (priority) but also trigger Google Sheets
+            // Wait ONLY for Firestore to finish
             await Promise.race([
-                Promise.all([firestorePromise, sheetPromise]),
+                firestorePromise,
                 timeoutPromise
             ]);
 
