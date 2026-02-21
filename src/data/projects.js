@@ -162,5 +162,39 @@ export const projects = [
             label: "Book Now",
             to: "contact"
         }
+    },
+    {
+        title: "NDS Foodie",
+        category: "ai",
+        description: "Restaurant Billing System",
+        summary: "A modern, responsive, and high-performance POS (Point of Sale) System built with Vite + React to streamline restaurant operations through dynamic menu management and reliable bill generation.",
+        problemStatements: [
+            "Data Flow management across orders and billing",
+            "Admin Authentication Layer for secure access",
+            "CRUD Integration & Persistence for menu and sales records"
+        ],
+        impacts: [
+            "Streamlined Billing & Checkout process",
+            "Comprehensive Billing History & Analytics",
+            "Centralized Admin Panel for operations",
+            "High-performance UI/UX for fast-paced environments"
+        ],
+        resolutions: [
+            "Vite + React powered POS architecture",
+            "Dynamic state management for real-time order tracking",
+            "Persistent storage for menu items and sales data",
+            "Role-based authentication for administrative control"
+        ],
+        images: [
+            "/projects/emp 1.png",
+            "/projects/student.png",
+            "/projects/emp3.png"
+        ],
+        color: "secondary",
+        layout: "2x2",
+        cta: {
+            label: "Book Now",
+            to: "contact"
+        }
     }
 ];

@@ -1,16 +1,17 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { BarChart3, Figma, ArrowRight } from 'lucide-react';
+import { BarChart3, Figma, ArrowRight, Cpu } from 'lucide-react';
 
 const projectImages = [
-    // 3 Power BI Previews
+    // 2 Power BI Previews
     "/projects/emp 1.png",
     "/projects/student.png",
+    // 2 AI Previews
     "/projects/emp3.png",
-    // 3 Figma Previews
+    "/projects/chat app MacBook Pro 14_ - 1.png",
+    // 2 Figma Previews
     "/projects/NDS mockup.png",
-    "/projects/NDS iPhone 15.png",
-    "/projects/NDS mockup_mobile.png"
+    "/projects/NDS iPhone 15.png"
 ];
 
 export const Projects = () => {
@@ -60,8 +61,8 @@ export const Projects = () => {
                             ))}
                         </div>
 
-                        {/* Two Columns for Categories - More Compact */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Three Columns for Categories */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* Power BI Column */}
                             <Link to="/power-bi-projects" className="group/card">
                                 <motion.div
@@ -76,6 +77,25 @@ export const Projects = () => {
                                         Interactive dashboards transforming raw data into business strategies.
                                     </p>
                                     <div className="flex items-center gap-2 text-emerald-500 text-sm font-bold group-hover/card:gap-3 transition-all">
+                                        Explore <ArrowRight className="w-4 h-4" />
+                                    </div>
+                                </motion.div>
+                            </Link>
+
+                            {/* AI Integrated Website Column */}
+                            <Link to="/ai-projects" className="group/card">
+                                <motion.div
+                                    whileHover={{ y: -5 }}
+                                    className="h-full p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-500"
+                                >
+                                    <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 text-blue-500">
+                                        <Cpu className="w-6 h-6" />
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-3 text-white">AI Website</h3>
+                                    <p className="text-gray-400 text-sm mb-4 leading-relaxed line-clamp-2">
+                                        Smart digital platforms with integrated AI and predictive intelligence.
+                                    </p>
+                                    <div className="flex items-center gap-2 text-blue-500 text-sm font-bold group-hover/card:gap-3 transition-all">
                                         Explore <ArrowRight className="w-4 h-4" />
                                     </div>
                                 </motion.div>

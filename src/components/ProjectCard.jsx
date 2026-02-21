@@ -36,7 +36,7 @@ export const ProjectCard = ({ project, index }) => {
                             whileInView={{ opacity: 1, scale: 1 }}
                             className="inline-block px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-4 border border-emerald-500/30 text-emerald-500 bg-emerald-500/10"
                         >
-                            {project.category === 'powerbi' ? 'Power BI' : 'Figma'} Project
+                            {project.category === 'powerbi' ? 'Power BI' : project.category === 'ai' ? 'AI Integrated' : 'Figma'} Project
                         </motion.div>
 
                         <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white leading-tight">
