@@ -33,8 +33,24 @@ export const Header = () => {
             className="fixed top-0 left-0 right-0 z-50 bg-dark/50 backdrop-blur-md border-b border-white/5"
         >
             <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-                <div onClick={() => handleNavClick('hero')} className="text-2xl font-bold text-white cursor-pointer tracking-tighter">
-                    RDJ<span className="text-secondary">.</span>
+                <div className="flex items-center gap-4">
+                    <div onClick={() => handleNavClick('hero')} className="text-2xl font-bold text-white cursor-pointer tracking-tighter">
+                        RDJ<span className="text-secondary">.</span>
+                    </div>
+
+                    <motion.a
+                        href="https://www.linkedin.com/in/dhanushjothi07"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.1 }}
+                        className="flex items-center"
+                    >
+                        <img
+                            src="/projects/LI-In-Bug.png"
+                            alt="LinkedIn"
+                            className="h-6 w-auto object-contain brightness-90 hover:brightness-110 transition-all duration-300 drop-shadow-[0_0_8px_rgba(10,102,194,0.4)]"
+                        />
+                    </motion.a>
                 </div>
 
                 {/* Desktop Nav */}

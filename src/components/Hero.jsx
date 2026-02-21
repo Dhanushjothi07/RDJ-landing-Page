@@ -63,7 +63,6 @@ export const Hero = () => {
                             </div>
                         </div>
                     </div>
-
                     {/* Floating decorative elements */}
                     <div className="absolute -top-10 -right-10 w-20 h-20 bg-white rounded-full blur-xl opacity-10 animate-pulse" />
                     <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-secondary rounded-full blur-2xl opacity-10 animate-pulse" />
