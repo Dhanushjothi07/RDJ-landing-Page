@@ -38,19 +38,38 @@ export const Header = () => {
                         RDJ<span className="text-secondary">.</span>
                     </div>
 
-                    <motion.a
-                        href="https://www.linkedin.com/in/dhanushjothi07"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.1 }}
-                        className="flex items-center"
-                    >
-                        <img
-                            src="/projects/LI-In-Bug.png"
-                            alt="LinkedIn"
-                            className="h-6 w-auto object-contain brightness-90 hover:brightness-110 transition-all duration-300 drop-shadow-[0_0_8px_rgba(10,102,194,0.4)]"
-                        />
-                    </motion.a>
+                    {/* Shared Icons/Images Style */}
+                    <div className="flex items-center gap-3 border-l border-white/10 pl-4">
+                        <motion.a
+                            href="https://www.linkedin.com/in/dhanushjothi07"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.1 }}
+                            className="flex items-center"
+                        >
+                            <img
+                                src="/projects/LI-In-Bug.png"
+                                alt="LinkedIn"
+                                className="h-6 w-auto object-contain brightness-90 hover:brightness-110 transition-all duration-300 drop-shadow-[0_0_8px_rgba(10,102,194,0.4)]"
+                            />
+                        </motion.a>
+
+                        {/* Mobile Only Profile Image */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="md:hidden flex items-center"
+                            onClick={() => handleNavClick('hero')}
+                        >
+                            <div className="w-8 h-8 rounded-full overflow-hidden border border-secondary/50 shadow-[0_0_10px_rgba(0,243,255,0.2)] cursor-pointer">
+                                <img
+                                    src="/projects/profile.jpg"
+                                    alt="RDJ Profile"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
 
                 {/* Desktop Nav */}
