@@ -186,9 +186,9 @@ export const projects = [
             "Role-based authentication for administrative control"
         ],
         images: [
-            "/projects/emp 1.png",
-            "/projects/student.png",
-            "/projects/emp3.png"
+            "/projects/foodies1.png",
+            "/projects/Foodie2.png",
+            "/projects/Foodie3.png"
         ],
         color: "secondary",
         layout: "2x2",
