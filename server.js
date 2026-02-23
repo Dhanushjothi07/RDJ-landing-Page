@@ -96,43 +96,75 @@ const postToGoogleSheet = async (data) => {
     }
 };
 
-app.post('/api/contact', (req, res) => {
-    console.log('Received contact request:', req.body);
-    const { name, phone, email, requirement, message } = req.body;
+app.post('/api/contact', async (req, res, next) => {
+    try {
+        console.log('--- Received contact request ---');
+        console.log('Body:', req.body);
 
-    if (!name || !email || !phone || !requirement) {
-        return res.status(400).json({ error: 'All fields except message are required.' });
-    }
+        const { name, phone, email, requirement, message } = req.body;
 
-    const currentDate = new Date().toLocaleString();
-
-    db.run(
-        `INSERT INTO submissions (date, name, phone, email, requirement, message) VALUES (?, ?, ?, ?, ?, ?)`,
-        [currentDate, name, phone, email, requirement, message || ''],
-        function (err) {
-            if (err) {
-                console.error('DATABASE ERROR:', err);
-                return res.status(500).json({ error: 'Error saving to database: ' + err.message });
-            }
-            console.log(`Data saved to SQL database with ID: ${this.lastID}`);
-
-            // Step 2 & 3: Create Excel and copy data
-            exportToExcel();
-
-            // Step 4: Post to Google Sheets
-            postToGoogleSheet({ date: currentDate, name, phone, email, requirement, message: message || '' });
-
-            res.status(200).json({
-                status: 'success',
-                message: 'Data saved successfully to SQL, Excel, and Google Sheets',
-                id: this.lastID
-            });
+        if (!name || !email || !phone || !requirement) {
+            console.warn('Validation failed: Missing fields');
+            return res.status(400).json({ error: 'All fields except message are required.' });
         }
-    );
+
+        const currentDate = new Date().toLocaleString();
+
+        db.run(
+            `INSERT INTO submissions (date, name, phone, email, requirement, message) VALUES (?, ?, ?, ?, ?, ?)`,
+            [currentDate, name, phone, email, requirement, message || ''],
+            async function (err) {
+                if (err) {
+                    console.error('DATABASE ERROR:', err);
+                    return res.status(500).json({ error: 'Error saving to database: ' + err.message });
+                }
+
+                console.log(`Data saved to SQL database with ID: ${this.lastID}`);
+
+                try {
+                    // Step 2 & 3: Create Excel and copy data
+                    exportToExcel();
+
+                    // Step 4: Post to Google Sheets
+                    // Using .catch to prevent unhandled rejections from crashing the response
+                    postToGoogleSheet({
+                        date: currentDate,
+                        name,
+                        phone,
+                        email,
+                        requirement,
+                        message: message || ''
+                    }).catch(e => console.error('Background Google Sheets error:', e.message));
+
+                } catch (bgError) {
+                    console.error('Background task error (Excel/Sheets):', bgError);
+                }
+
+                res.status(200).json({
+                    status: 'success',
+                    message: 'Data saved successfully',
+                    id: this.lastID
+                });
+            }
+        );
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('UNHANDLED SERVER ERROR:', err);
+    res.status(500).json({
+        error: 'Internal Server Error',
+        message: err.message,
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
-    console.log(`Local network URL: http://<your-ip>:${PORT}`);
-    console.log(`Database file location: ${DB_PATH}`);
+    console.log(`\n🚀 Server is actively running!`);
+    console.log(`🔗 Local: http://localhost:${PORT}`);
+    console.log(`📱 Mobile: http://YOUR_LAPTOP_IP:${PORT}`);
+    console.log(`📁 Database: ${DB_PATH}\n`);
 });
