@@ -46,10 +46,18 @@ export const Contact = () => {
                 body: JSON.stringify(formData),
             });
 
-            const result = await response.json();
+            // Check if response is actually JSON
+            const contentType = response.headers.get("content-type");
+            let result;
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                result = await response.json();
+            } else {
+                const text = await response.text();
+                throw new Error(text || `Server returned ${response.status}`);
+            }
 
             if (!response.ok) {
-                throw new Error(result.error || 'Failed to send message');
+                throw new Error(result?.error || result?.message || 'Failed to send message');
             }
 
             console.log("Message successfully sent via API:", result);
@@ -59,7 +67,8 @@ export const Contact = () => {
         } catch (error) {
             console.error('Submission Error:', error);
             setStatus('error');
-            setErrorMessage(`Error: ${error.message || 'Check browser console for details.'}`);
+            // If it's a "Unexpected token A" kind of error, we now catch it earlier
+            setErrorMessage(error.message.includes("<!DOCTYPE") ? "Server error: Check if the backend is running." : `Error: ${error.message}`);
         }
     };
 
