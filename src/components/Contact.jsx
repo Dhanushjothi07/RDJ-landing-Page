@@ -36,8 +36,23 @@ export const Contact = () => {
         setErrorMessage('');
 
         try {
-            console.log("Submitting form via serverless function...");
+            console.log("Submitting form...");
 
+            // 1. Direct persistence to Firestore (Frontend SDK)
+            if (db) {
+                try {
+                    await addDoc(collection(db, 'contacts'), {
+                        ...formData,
+                        timestamp: serverTimestamp(),
+                        source: 'frontend-direct'
+                    });
+                    console.log("Firestore capture successful");
+                } catch (fsError) {
+                    console.error("Firestore persistence failed:", fsError);
+                }
+            }
+
+            // 2. Submit to Backend API (SQL, Excel, Google Sheets)
             const response = await fetch('/api/contact', {
                 method: 'POST',
                 headers: {
@@ -60,7 +75,7 @@ export const Contact = () => {
                 throw new Error(result?.error || result?.message || 'Failed to send message');
             }
 
-            console.log("Message successfully sent via API:", result);
+            console.log("Backend API capture successful:", result);
             setStatus('success');
             setFormData({ name: '', phone: '', email: '', requirement: '', message: '' });
             setTimeout(() => setStatus('idle'), 3000);
