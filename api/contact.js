@@ -5,8 +5,12 @@ export default async function handler(req, res) {
             status: "Functional (Zero-Import Base)",
             node: process.version,
             env: {
-                hasFirebase: !!process.env.FIREBASE_PRIVATE_KEY,
-                hasGmail: !!process.env.GMAIL_APP_PASSWORD
+                VITE_FIREBASE_PROJECT_ID: !!process.env.VITE_FIREBASE_PROJECT_ID,
+                FIREBASE_CLIENT_EMAIL: !!process.env.FIREBASE_CLIENT_EMAIL,
+                FIREBASE_PRIVATE_KEY: !!process.env.FIREBASE_PRIVATE_KEY,
+                GMAIL_USER: !!process.env.GMAIL_USER,
+                GMAIL_APP_PASSWORD: !!process.env.GMAIL_APP_PASSWORD,
+                keyPrefix: process.env.FIREBASE_PRIVATE_KEY?.substring(0, 20) + "..."
             }
         });
     }
