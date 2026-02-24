@@ -21,59 +21,75 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Payload missing' });
         }
 
-        // 2. Dynamic Imports (Only when needed)
-        const [
-            { initializeApp, cert, getApps },
-            { getFirestore },
-            nodemailer
-        ] = await Promise.all([
-            import('firebase-admin/app'),
-            import('firebase-admin/firestore'),
-            import('nodemailer')
-        ]);
-
-        // FIREBASE
-        if (!getApps().length) {
-            const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-            initializeApp({
-                credential: cert({
-                    projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-                    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-                    privateKey: privateKey,
-                }),
-            });
+        // 2. Dynamic Imports
+        let imports;
+        try {
+            imports = await Promise.all([
+                import('firebase-admin/app'),
+                import('firebase-admin/firestore'),
+                import('nodemailer')
+            ]);
+        } catch (importErr) {
+            throw new Error(`Dependency Load Failed: ${importErr.message}`);
         }
-        const db = getFirestore();
-        await db.collection('contacts').add({
-            ...formData,
-            timestamp: new Date(),
-            source: 'vercel-api-dynamic'
-        });
 
-        // EMAIL
-        const transporter = nodemailer.default.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
-            },
-        });
+        const [{ initializeApp, cert, getApps }, { getFirestore }, nodemailer] = imports;
 
-        await transporter.sendMail({
-            from: `"${formData.name}" <${process.env.GMAIL_USER}>`,
-            to: process.env.GMAIL_USER,
-            subject: `Lead: ${formData.name}`,
-            text: `Inquiry from ${formData.name} (${formData.email})`
-        });
+        // 3. FIREBASE
+        try {
+            if (!getApps().length) {
+                const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+                if (!process.env.VITE_FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !privateKey) {
+                    throw new Error('Firebase environment variables are missing in Vercel settings.');
+                }
+                initializeApp({
+                    credential: cert({
+                        projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+                        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                        privateKey: privateKey,
+                    }),
+                });
+            }
+            const db = getFirestore();
+            await db.collection('contacts').add({
+                ...formData,
+                timestamp: new Date(),
+                source: 'vercel-api-ultra-granular'
+            });
+        } catch (fsErr) {
+            throw new Error(`Firestore Error: ${fsErr.message}`);
+        }
+
+        // 4. EMAIL
+        try {
+            if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+                throw new Error('Gmail credentials missing in Vercel settings.');
+            }
+            const transporter = nodemailer.default.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.GMAIL_USER,
+                    pass: process.env.GMAIL_APP_PASSWORD,
+                },
+            });
+
+            await transporter.sendMail({
+                from: `"${formData.name}" <${process.env.GMAIL_USER}>`,
+                to: process.env.GMAIL_USER,
+                subject: `Lead: ${formData.name}`,
+                text: `Inquiry from ${formData.name} (${formData.email})`
+            });
+        } catch (emErr) {
+            throw new Error(`Email Error: ${emErr.message}`);
+        }
 
         return res.status(200).json({ success: true, message: "Inquiry stored and email sent" });
 
     } catch (err) {
-        console.error('CRITICAL_API_FAIL:', err);
+        console.error('API_EXECUTION_ERROR:', err);
         return res.status(500).json({
             error: 'Execution Failed',
-            details: err.message,
-            hint: "Check environment variables and Vercel logs"
+            details: err.message
         });
     }
 }

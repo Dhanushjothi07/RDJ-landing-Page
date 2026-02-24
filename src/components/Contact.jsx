@@ -73,7 +73,8 @@ export const Contact = () => {
             }
 
             if (!response.ok) {
-                throw new Error(result?.error || result?.details || 'Failed to send message');
+                const errorMsg = result?.details ? `${result.error}: ${result.details}` : (result?.error || 'Failed to send message');
+                throw new Error(errorMsg);
             }
 
             console.log("Backend API success:", result);
