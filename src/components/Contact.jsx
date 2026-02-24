@@ -68,22 +68,23 @@ export const Contact = () => {
                 result = await response.json();
             } else {
                 const text = await response.text();
-                throw new Error(text || `Server returned ${response.status}`);
+                console.error("FULL SERVER ERROR HTML:", text);
+                throw new Error(`Server returned a critical error (500). Please check the Browser Console for the full error details.`);
             }
 
             if (!response.ok) {
-                throw new Error(result?.error || result?.message || 'Failed to send message');
+                throw new Error(result?.error || result?.details || 'Failed to send message');
             }
 
-            console.log("Backend API capture successful:", result);
+            console.log("Backend API success:", result);
             setStatus('success');
             setFormData({ name: '', phone: '', email: '', requirement: '', message: '' });
             setTimeout(() => setStatus('idle'), 3000);
         } catch (error) {
             console.error('Submission Error:', error);
             setStatus('error');
-            // If it's a "Unexpected token A" kind of error, we now catch it earlier
-            setErrorMessage(error.message.includes("<!DOCTYPE") ? "Server error: Check if the backend is running." : `Error: ${error.message}`);
+            // Provide a direct diagnostic link in the error message
+            setErrorMessage(`${error.message} (Try diagnostic: /api/contact?test=true)`);
         }
     };
 
