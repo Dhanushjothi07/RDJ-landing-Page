@@ -1,15 +1,19 @@
 import { motion } from 'framer-motion';
+import { Suspense, lazy } from 'react';
 import { Button } from './ui/Button';
-import { Scene } from './Scene';
 import { ArrowRight } from 'lucide-react';
 import { smoothScrollTo } from '../utils/smoothScroll';
+
+const Scene = lazy(() => import('./Scene').then(module => ({ default: module.Scene })));
 
 export const Hero = () => {
     return (
         <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
             {/* Background Elements */}
             <div className="absolute inset-0 z-0">
-                <Scene />
+                <Suspense fallback={<div className="w-full h-full bg-dark/10" />}>
+                    <Scene />
+                </Suspense>
             </div>
 
             {/* Gradient Overlay for Text Readability - Darker for neon pop */}

@@ -12,8 +12,7 @@ export const FigmaProjects = () => {
             <div className="container mx-auto px-6">
                 <Link
                     to="/"
-                    className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-12 transition-colors group"
-                >
+                    className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-12 transition-colors group">
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                     Back to Home
                 </Link>

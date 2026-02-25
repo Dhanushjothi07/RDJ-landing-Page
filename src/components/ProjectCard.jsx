@@ -1,10 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Calendar, X, Maximize2 } from 'lucide-react';
 import { Button } from './ui/Button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const ProjectCard = ({ project, index }) => {
+export const ProjectCard = memo(({ project, index }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const navigate = useNavigate();
 
@@ -144,6 +144,7 @@ export const ProjectCard = ({ project, index }) => {
                                         <img
                                             src={img}
                                             alt={`${project.title} view ${i + 1}`}
+                                            loading="lazy"
                                             className="absolute inset-0 w-full h-full object-cover object-top hover:scale-110 transition-transform duration-1000"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -203,4 +204,4 @@ export const ProjectCard = ({ project, index }) => {
             </AnimatePresence>
         </>
     );
-};
+});

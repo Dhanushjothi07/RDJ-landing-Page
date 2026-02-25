@@ -54,6 +54,7 @@ export const Projects = () => {
                                     <img
                                         src={src}
                                         alt={`Project preview ${i + 1}`}
+                                        loading="lazy"
                                         className="w-full h-full object-cover blur-[2px] hover:blur-0 transition-all duration-700 hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-black/10 group-hover/img:bg-transparent transition-colors duration-500" />

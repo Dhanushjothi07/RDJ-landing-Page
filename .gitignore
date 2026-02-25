@@ -28,4 +28,5 @@ server_output.txt
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+# Firebase Service Account
+rdj-landing-page-firebase-*.json

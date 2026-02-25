@@ -17,12 +17,10 @@ export const PowerBIProjects = () => {
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                     Back to Home
                 </Link>
-
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-24"
-                >
+                    className="mb-24">
                     <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white text-center">
                         Power BI <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Projects</span>
                     </h1>
@@ -30,7 +28,6 @@ export const PowerBIProjects = () => {
                         A showcase of data analytics dashboards designed to turn complex data into actionable business intelligence.
                     </p>
                 </motion.div>
-
                 <div className="flex flex-col">
                     {powerBIProjects.map((project, index) => (
                         <ProjectCard key={index} project={project} index={index} />
