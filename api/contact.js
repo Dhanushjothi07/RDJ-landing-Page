@@ -58,6 +58,25 @@ export default async function handler(req, res) {
             text: JSON.stringify(formData, null, 2)
         });
 
+        // 5. N8N WEBHOOK (Optional Forwarding)
+        if (process.env.N8N_WEBHOOK_URL) {
+            try {
+                await fetch(process.env.N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ...formData,
+                        _source: 'vercel-api',
+                        _timestamp: new Date().toISOString()
+                    })
+                });
+                console.log("n8n webhook forwarding successful");
+            } catch (n8nError) {
+                console.error("n8n forwarding failed:", n8nError.message);
+                // We don't throw here to ensure the main process (Firebase/Email) isn't blocked
+            }
+        }
+
         return res.status(200).json({ success: true });
 
     } catch (err) {
